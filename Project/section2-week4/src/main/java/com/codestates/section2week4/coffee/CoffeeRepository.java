@@ -1,9 +1,9 @@
 package com.codestates.section2week4.coffee;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class CoffeeRepository {
-
     private static Map<Long, Coffee> drinks = new HashMap<>();
 
     public void postCoffee(Coffee coffee) {
