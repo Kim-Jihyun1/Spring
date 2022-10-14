@@ -1,12 +1,13 @@
 package com.codestates.section2week4.member;
 
 import com.codestates.section2week4.DependencyConfig;
-import com.codestates.section2week4.coffee.CoffeeService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class MemberTest {
     public static void main(String[] args) {
-        DependencyConfig dependencyConfig = new DependencyConfig();
-        MemberService memberService = dependencyConfig.memberService();
+        ApplicationContext ac = new AnnotationConfigApplicationContext(DependencyConfig.class);
+        MemberService memberService = ac.getBean("memberService", MemberService.class);
 
         Member member = new Member(0L, "lucky@codestates.com", "KimLucky", "010-1234-5678");
         memberService.createMember(member);
