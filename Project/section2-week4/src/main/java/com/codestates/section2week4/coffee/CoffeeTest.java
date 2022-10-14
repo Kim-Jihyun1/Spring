@@ -5,8 +5,8 @@ import com.codestates.section2week4.member.MemberService;
 
 public class CoffeeTest {
     public static void main(String[] args) {
-        DependencyConfig config = new DependencyConfig();
-        CoffeeService coffeeService = config.coffeeService();
+        DependencyConfig dependencyConfig = new DependencyConfig();
+        CoffeeService coffeeService = dependencyConfig.coffeeService();
 
         Coffee coffee = new Coffee(0L, "바닐라 라떼", "vanilla latte", 5000);
         coffeeService.createCoffee(coffee);

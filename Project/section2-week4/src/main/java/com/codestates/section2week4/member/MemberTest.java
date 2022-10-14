@@ -5,8 +5,8 @@ import com.codestates.section2week4.coffee.CoffeeService;
 
 public class MemberTest {
     public static void main(String[] args) {
-        DependencyConfig config = new DependencyConfig();
-        MemberService memberService = config.memberService();
+        DependencyConfig dependencyConfig = new DependencyConfig();
+        MemberService memberService = dependencyConfig.memberService();
 
         Member member = new Member(0L, "lucky@codestates.com", "KimLucky", "010-1234-5678");
         memberService.createMember(member);
