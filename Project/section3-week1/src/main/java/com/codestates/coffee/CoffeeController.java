@@ -1,40 +1,38 @@
 package com.codestates.coffee;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/vi/coffees")
 public class CoffeeController {
     @PostMapping
-    public ResponseEntity postCoffee(@RequestParam("korName") String korName,
-                                     @RequestParam("engName") String engName,
-                                     @RequestParam("price") String price) {
-        // JSON 문자열을 수작업으로 작성한 부분을 Map 객체로 대체
-        Map<String, String> map = new HashMap<>();
-        map.put("korName", korName);
-        map.put("engName", engName);
-        map.put("price", price);
+    public String postCoffee(@RequestParam("korName") String korName,
+                             @RequestParam("engName") String engName,
+                             @RequestParam("price") String price) {
+        System.out.println("# korName : " + korName);
+        System.out.println("# engName : " + engName);
+        System.out.println("# price : " + price);
 
-        // 리턴 값을 ResponseEntity  객체로 변경
-        return new ResponseEntity<>(map, HttpStatus.CREATED);
+        String response =
+                "{\"" +
+                        "korName\":\"" + korName + "\"," +
+                        "\"engName\":\"" + engName + "\"," +
+                        "price\":\"" + price +
+                "\"}";
+        return response;
     }
     @GetMapping("/{coffee-id}")
-    public ResponseEntity getCoffee(@PathVariable("coffee-id")long coffeeId) {
+    public String getCoffee(@PathVariable("coffee-id")long coffeeId) {
         System.out.println("# coffeeId : " + coffeeId);
 
         // not implementation
-        return new ResponseEntity<>(HttpStatus.OK);
+        return null;
     }
     @GetMapping
-    public ResponseEntity getCoffees() {
+    public String getCoffees() {
         System.out.println("# get Coffees");
 
         // not implementation
-         return new ResponseEntity<>(HttpStatus.OK);
+        return null;
     }
 }
