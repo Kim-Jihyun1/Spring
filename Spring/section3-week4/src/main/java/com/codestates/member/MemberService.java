@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service // Spring Bean
+@Service
 public class MemberService {
     public Member createMember(Member member) {
         // member 객체는 나중에 DB에 저장 이후 되돌려 받는 것으로 변경
