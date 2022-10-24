@@ -13,6 +13,7 @@ import javax.validation.constraints.Positive;
 @Validated
 public class MemberController {
     private final MemberService memberService;
+
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
