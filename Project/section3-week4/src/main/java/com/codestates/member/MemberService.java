@@ -1,6 +1,5 @@
 package com.codestates.member;
 
-import java.lang.reflect.Member;
 import java.util.List;
 
 public class MemberService {
