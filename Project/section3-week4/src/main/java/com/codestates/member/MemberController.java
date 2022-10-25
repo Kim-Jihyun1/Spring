@@ -9,9 +9,15 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 @RestController
-@RequestMapping("/v1/members")
+@RequestMapping("/v3/members")
 @Validated
 public class MemberController {
+    private final MemberService memberService;
+
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
+
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody MemberPostDto memberDto) {
         return new ResponseEntity<>(memberDto, HttpStatus.CREATED);
