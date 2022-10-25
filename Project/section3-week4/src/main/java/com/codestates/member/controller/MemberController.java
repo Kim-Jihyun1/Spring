@@ -1,9 +1,10 @@
 package com.codestates.member.controller;
 
-import com.codestates.member.MemberPatchDto;
-import com.codestates.member.MemberPostDto;
 import com.codestates.member.dto.MemberResponseDto;
+import com.codestates.member.dto.MemberPatchDto;
+import com.codestates.member.dto.MemberPostDto;
 import com.codestates.member.entity.Member;
+//import com.codestates.member.mapper.MemberMapper;
 import com.codestates.member.mapper.MemberMapper;
 import com.codestates.member.service.MemberService;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/v4/members")
+@RequestMapping("/v5/members")
 @Validated
 public class MemberController {
     private final MemberService memberService;
