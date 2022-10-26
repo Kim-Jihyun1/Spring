@@ -27,4 +27,13 @@ public class GlobalExceptionAdvice {
 
         return response;
     }
+
+    // RuntimeException catch
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleResourceNotFoundException(RuntimeException e) {
+        System.out.println(e.getMessage());
+
+        return null;
+    }
 }

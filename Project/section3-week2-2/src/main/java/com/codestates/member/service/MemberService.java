@@ -32,10 +32,13 @@ public class MemberService {
     public Member findMember(long memberId) {
         // TODO should business logic
 
-        // TODO member 객체는 나중에 DB에서 조회 하는 것으로 변경 필요.
-        Member member =
-                new Member(memberId, "hgd@gmail.com", "홍길동", "010-1234-5678");
-        return member;
+        // RuntimeException throw
+        throw new RuntimeException("Not found member");
+
+//        // TODO member 객체는 나중에 DB에서 조회 하는 것으로 변경 필요.
+//        Member member =
+//                new Member(memberId, "hgd@gmail.com", "홍길동", "010-1234-5678");
+//        return member;
     }
 
     public List<Member> findMembers() {
