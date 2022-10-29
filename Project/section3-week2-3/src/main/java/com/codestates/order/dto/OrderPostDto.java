@@ -8,7 +8,6 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Getter
-@Setter
 public class OrderPostDto {
     @Positive
     private long memberId;

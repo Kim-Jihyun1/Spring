@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.springframework.data.annotation.Id;
+
+
 /**
  *  - 멤버 변수 추가
  *  - lombok 추가
