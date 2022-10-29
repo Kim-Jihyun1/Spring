@@ -28,8 +28,7 @@ public class Order {
     private Set<CoffeeRef> orderCoffees = new LinkedHashSet<>();
 
     private OrderStatus orderStatus = OrderStatus.ORDER_REQUEST;
-
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     public enum OrderStatus {
         ORDER_REQUEST(1, "주문 요청"),
