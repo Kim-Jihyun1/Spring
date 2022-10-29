@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-// TODO V10
 @Getter
 @Setter
 @Table("ORDERS")
@@ -28,6 +27,7 @@ public class Order {
     private Set<CoffeeRef> orderCoffees = new LinkedHashSet<>();
 
     private OrderStatus orderStatus = OrderStatus.ORDER_REQUEST;
+
     private LocalDateTime createdAt;
 
     public enum OrderStatus {
