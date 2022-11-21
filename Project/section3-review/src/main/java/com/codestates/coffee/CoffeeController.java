@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 public class CoffeeController {
     // 커피 정보 등록
     @PostMapping
-    public String postCoffee(@RequestParam("korName") String korName, @RequestParam("engName") String engName, @RequestParam("price") String price) {
+    public String postCoffee(@RequestParam("korName") String korName, @RequestParam("engName") String engName, @RequestParam("price") int price) {
         System.out.println("# korName: " + korName);
         System.out.println("# engName: " + engName);
         System.out.println("# price: " + price);
