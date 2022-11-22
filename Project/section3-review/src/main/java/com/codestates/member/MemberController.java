@@ -4,15 +4,15 @@ import com.codestates.member.dto.MemberPatchDto;
 import com.codestates.member.dto.MemberPostDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.Map;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
-// DTO 적용(postMember, patchMember)
 @RestController
 @RequestMapping("/v1/members")
+@Validated // 유효성 검증이 정상적으로 수행되기 위함
 public class MemberController {
 //    private final Map<Long, Map<String, Object>> members = new HashMap<>();
 //
@@ -30,13 +30,14 @@ public class MemberController {
 
     // 회원 정보 등록
     @PostMapping
-    public ResponseEntity postMember(@RequestBody MemberPostDto memberPostDto) { // @RequestBody : JSON -> DTO (역직렬화), @ResponseBody : DTO -> JSON 직렬화)
+    public ResponseEntity postMember(@Valid @RequestBody MemberPostDto memberPostDto) {
         return new ResponseEntity<>(memberPostDto, HttpStatus.CREATED);
     }
 
     // 회원 정보 수정
     @PatchMapping("/{member-id}")
-    public ResponseEntity patchMember(@PathVariable("member-id") long memberId, @RequestBody MemberPatchDto memberPatchDto) { // DTO 적용
+    public ResponseEntity patchMember(@PathVariable("member-id") @Min(1) long memberId, // @Min(1) : memberId가 1 이상의 숫자
+                                      @Valid @RequestBody MemberPatchDto memberPatchDto) {
         memberPatchDto.setMemberId(memberId);
         memberPatchDto.setName("홍길동");
 
