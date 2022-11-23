@@ -19,14 +19,14 @@ public class MemberService {
         return updatedMember;
     }
 
-    public Member findMember(long memberId) { // stub 데이터
+    public Member findMember(long memberId) {
         // TODO should business logic
 
         Member member = new Member(memberId, "hgd@gmail.com", "홍길동", "010-1234-5678");
         return member;
     }
 
-    public List<Member> findMembers() { // stub 데이터
+    public List<Member> findMembers() {
         // TODO should business logic
 
         List<Member> members = List.of(
