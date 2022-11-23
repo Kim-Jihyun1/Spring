@@ -10,18 +10,17 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/members")
+@RequestMapping("/v3/members")
 @Validated // 유효성 검증이 정상적으로 수행되기 위함
 public class MemberController {
     private final MemberService memberService;
 
-    public MemberController() {
-        this.memberService = new MemberService();
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     // 회원 정보 등록

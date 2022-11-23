@@ -1,9 +1,11 @@
 package com.codestates.member.service;
 
 import com.codestates.member.entity.Member;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class MemberService {
     public Member createMember(Member member) {
         // TODO should business logic
