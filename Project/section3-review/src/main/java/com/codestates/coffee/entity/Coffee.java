@@ -1,4 +1,4 @@
-package com.codestates.coffee;
+package com.codestates.coffee.entity;
 
 public class Coffee {
     private String korName;

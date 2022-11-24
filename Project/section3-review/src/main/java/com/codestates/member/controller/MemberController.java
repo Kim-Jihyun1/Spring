@@ -2,7 +2,9 @@ package com.codestates.member.controller;
 
 import com.codestates.member.dto.MemberPatchDto;
 import com.codestates.member.dto.MemberPostDto;
+import com.codestates.member.dto.MemberResponseDto;
 import com.codestates.member.entity.Member;
+import com.codestates.member.mapper.MemberMapper;
 import com.codestates.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,28 +14,29 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/v3/members")
+@RequestMapping("/v4/members")
 @Validated // 유효성 검증이 정상적으로 수행되기 위함
 public class MemberController {
     private final MemberService memberService;
+    private final MemberMapper mapper;
 
-    public MemberController(MemberService memberService) {
+    // MemberMapper DI
+    public MemberController(MemberService memberService, MemberMapper mapper) {
         this.memberService = memberService;
+        this.mapper = mapper;
     }
 
     // 회원 정보 등록
     @PostMapping
-    public ResponseEntity postMember(@Valid @RequestBody MemberPostDto memberPostDto) {
-        Member member = new Member();
-        member.setEmail(memberPostDto.getEmail());
-        member.setName(memberPostDto.getName());
-        member.setPhone(memberPostDto.getPhone());
+    public ResponseEntity postMember(@Valid @RequestBody MemberPostDto memberDto) {
+        Member member = mapper.memberPostDtoToMember(memberDto);
 
-        Member response = memberService.createMember(member); // 서비스 계층과의 연결 지점
+        Member response = memberService.createMember(member);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response), HttpStatus.CREATED);
     }
 
     // 회원 정보 수정
@@ -42,32 +45,29 @@ public class MemberController {
                                       @Valid @RequestBody MemberPatchDto memberPatchDto) {
         memberPatchDto.setMemberId(memberId);
 
-        Member member = new Member();
-        member.setMemberId(memberPatchDto.getMemberId());
-        member.setName(memberPatchDto.getName());
-        member.setPhone(memberPatchDto.getPhone());
+        Member response = memberService.updateMember(mapper.memberPatchDtoToMember(memberPatchDto));
 
-        Member response = memberService.updateMember(member); // 서비스 계층과의 연결 지점
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response), HttpStatus.OK);
     }
 
     // 특정 회원 정보 조회
     @GetMapping("/{member-id}")
     public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
-        System.out.println("# memberId: " + memberId);
 
-        Member response = memberService.findMember(memberId); // 서비스 계층과의 연결 지점
+        Member response = memberService.findMember(memberId);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response), HttpStatus.OK);
     }
 
     // 전체 회원 목록 조회
     @GetMapping
     public ResponseEntity getMembers() {
-        System.out.println("# get Members");
+        List<Member> members = memberService.findMembers();
 
-        List<Member> response = memberService.findMembers();
+        List<MemberResponseDto> response =
+                members.stream()
+                        .map(member -> mapper.memberToMemberResponseDto(member))
+                        .collect(Collectors.toList());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

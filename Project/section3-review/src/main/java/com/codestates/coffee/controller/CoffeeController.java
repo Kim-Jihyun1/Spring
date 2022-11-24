@@ -1,4 +1,4 @@
-package com.codestates.coffee;
+package com.codestates.coffee.controller;
 
 import com.codestates.coffee.dto.CoffeePatchDto;
 import com.codestates.coffee.dto.CoffeePostDto;
