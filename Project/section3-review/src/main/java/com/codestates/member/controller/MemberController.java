@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/v4/members")
+@RequestMapping("/v5/members")
 @Validated // 유효성 검증이 정상적으로 수행되기 위함
 public class MemberController {
     private final MemberService memberService;
