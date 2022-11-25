@@ -1,14 +1,13 @@
-package com.codestates.coffee.entity;
+package com.codestates.coffee.dto;
 
-import com.codestates.values.Money;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class Coffee {
+public class CoffeeResponseDto {
     private long coffeeId;
     private String korName;
     private String engName;
-    private Money price;
+    private int price;
 }
