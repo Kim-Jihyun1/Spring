@@ -6,9 +6,13 @@ import com.codestates.member.dto.MemberResponseDto;
 import com.codestates.member.entity.Member;
 import com.codestates.member.mapper.MemberMapper;
 import com.codestates.member.service.MemberService;
+import com.codestates.response.ErrorResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,8 +21,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/v5/members")
-@Validated // 유효성 검증이 정상적으로 수행되기 위함
+@RequestMapping("/v7/members")
+@Validated // 유효성 검증
+@Slf4j
 public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
@@ -80,5 +85,22 @@ public class MemberController {
         memberService.deleteMember(memberId);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT); // 회원 정보가 삭제되어 존재하지 않으므로 204 No Content를 지정
+    }
+
+    // 예외 처리
+    @ExceptionHandler
+    public ResponseEntity handleException(MethodArgumentNotValidException e) {
+        final List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+
+        List<ErrorResponse.FieldError> errors =
+                fieldErrors.stream()
+                        .map(error -> new ErrorResponse.FieldError(
+                                error.getField(),
+                                error.getRejectedValue(),
+                                error.getDefaultMessage()
+                        ))
+                        .collect(Collectors.toList());
+
+        return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
     }
 }
