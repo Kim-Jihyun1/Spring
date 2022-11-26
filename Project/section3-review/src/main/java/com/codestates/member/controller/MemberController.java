@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/v7/members")
+@RequestMapping("/v8/members")
 @Validated // 유효성 검증
 @Slf4j
 public class MemberController {
@@ -88,19 +88,19 @@ public class MemberController {
     }
 
     // 예외 처리
-    @ExceptionHandler
-    public ResponseEntity handleException(MethodArgumentNotValidException e) {
-        final List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-
-        List<ErrorResponse.FieldError> errors =
-                fieldErrors.stream()
-                        .map(error -> new ErrorResponse.FieldError(
-                                error.getField(),
-                                error.getRejectedValue(),
-                                error.getDefaultMessage()
-                        ))
-                        .collect(Collectors.toList());
-
-        return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler
+//    public ResponseEntity handleException(MethodArgumentNotValidException e) {
+//        final List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+//
+//        List<ErrorResponse.FieldError> errors =
+//                fieldErrors.stream()
+//                        .map(error -> new ErrorResponse.FieldError(
+//                                error.getField(),
+//                                error.getRejectedValue(),
+//                                error.getDefaultMessage()
+//                        ))
+//                        .collect(Collectors.toList());
+//
+//        return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
+//    }
 }
