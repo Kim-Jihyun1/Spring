@@ -1,18 +1,14 @@
 package com.codestates.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import javax.validation.ConstraintViolation;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
-@AllArgsConstructor
 public class ErrorResponse { // v2
     private List<FieldError> fieldErrors;
     private List<ConstraintViolationError> violationErrors;
