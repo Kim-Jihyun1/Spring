@@ -1,12 +1,14 @@
 package com.codestates.member.controller;
 
+import com.codestates.response.MultiResponseDto;
+import com.codestates.response.SingleResponseDto;
 import com.codestates.member.dto.MemberPatchDto;
 import com.codestates.member.dto.MemberPostDto;
-import com.codestates.member.dto.MemberResponseDto;
 import com.codestates.member.entity.Member;
 import com.codestates.member.mapper.MemberMapper;
 import com.codestates.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v8/members")
@@ -34,70 +35,56 @@ public class MemberController {
     // 회원 정보 등록
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody MemberPostDto memberDto) {
-        Member member = mapper.memberPostDtoToMember(memberDto);
+        Member member = memberService.createMember(mapper.memberPostDtoToMember(memberDto));
 
-        Member response = memberService.createMember(member);
-
-        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response), HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(mapper.memberToMemberResponseDto(member)),
+                HttpStatus.CREATED);
     }
 
     // 회원 정보 수정
     @PatchMapping("/{member-id}")
-    public ResponseEntity patchMember(@PathVariable("member-id") @Positive long memberId,
-                                      @Valid @RequestBody MemberPatchDto memberPatchDto) {
+    public ResponseEntity patchMember(
+            @PathVariable("member-id") @Positive long memberId,
+            @Valid @RequestBody MemberPatchDto memberPatchDto) {
         memberPatchDto.setMemberId(memberId);
 
-        Member response = memberService.updateMember(mapper.memberPatchDtoToMember(memberPatchDto));
+        Member member = memberService.updateMember(mapper.memberPatchDtoToMember(memberPatchDto));
 
-        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response), HttpStatus.OK);
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(mapper.memberToMemberResponseDto(member)),
+                HttpStatus.OK);
     }
 
     // 특정 회원 정보 조회
     @GetMapping("/{member-id}")
-    public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
+    public ResponseEntity getMember(
+            @PathVariable("member-id") @Positive long memberId) {
+        Member member = memberService.findMember(memberId);
 
-        Member response = memberService.findMember(memberId);
-
-        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response), HttpStatus.OK);
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(mapper.memberToMemberResponseDto(member))
+                , HttpStatus.OK);
     }
 
     // 전체 회원 목록 조회
     @GetMapping
-    public ResponseEntity getMembers() {
-        List<Member> members = memberService.findMembers();
+    public ResponseEntity getMembers(@Positive @RequestParam int page,
+                                     @Positive @RequestParam int size) {
+        Page<Member> pageMembers = memberService.findMembers(page - 1, size);
+        List<Member> members = pageMembers.getContent();
 
-        List<MemberResponseDto> response =
-                members.stream()
-                        .map(member -> mapper.memberToMemberResponseDto(member))
-                        .collect(Collectors.toList());
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(mapper.membersToMemberResponseDtos(members),
+                        pageMembers),
+                HttpStatus.OK);
     }
 
     // 회원 정보 삭제
     @DeleteMapping("/{member-id}")
-    public ResponseEntity deleteMember(@PathVariable("member-id") long memberId) {
-        System.out.println("# delete member");
-
+    public ResponseEntity deleteMember(@PathVariable("member-id") @Positive long memberId) {
         memberService.deleteMember(memberId);
 
-        return new ResponseEntity(HttpStatus.NO_CONTENT); // 회원 정보가 삭제되어 존재하지 않으므로 204 No Content를 지정
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-
-    // 예외 처리
-//    @ExceptionHandler
-//    public ResponseEntity handleException(MethodArgumentNotValidException e) {
-//        final List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-//
-//        List<ErrorResponse.FieldError> errors =
-//                fieldErrors.stream()
-//                        .map(error -> new ErrorResponse.FieldError(
-//                                error.getField(),
-//                                error.getRejectedValue(),
-//                                error.getDefaultMessage()
-//                        ))
-//                        .collect(Collectors.toList());
-//
-//        return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
-//    }
 }

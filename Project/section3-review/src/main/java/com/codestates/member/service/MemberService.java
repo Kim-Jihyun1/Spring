@@ -3,6 +3,7 @@ package com.codestates.member.service;
 import com.codestates.exception.BusinessLogicException;
 import com.codestates.exception.ExceptionCode;
 import com.codestates.member.entity.Member;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,34 +13,30 @@ public class MemberService {
     public Member createMember(Member member) {
         // TODO should business logic
 
-        Member createdMember = member;
-        return createdMember;
+        throw new BusinessLogicException(ExceptionCode.NOT_IMPLEMENTATION);
     }
 
     public Member updateMember(Member member) {
         // TODO should business logic
 
-        Member updatedMember = member;
-        return updatedMember;
+        throw new BusinessLogicException(ExceptionCode.NOT_IMPLEMENTATION);
     }
 
     public Member findMember(long memberId) {
         // TODO should business logic
 
-        throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        throw new BusinessLogicException(ExceptionCode.NOT_IMPLEMENTATION);
     }
 
-    public List<Member> findMembers() {
+    public Page<Member> findMembers(int page, int size) {
         // TODO should business logic
 
-        List<Member> members = List.of(
-                new Member(1, "hgd@gmail.com", "홍길동", "010-1234-5678"),
-                new Member(2, "lml@gmail.com", "이몽룡", "010-1111-2222")
-        );
-        return members;
+        throw new BusinessLogicException(ExceptionCode.NOT_IMPLEMENTATION);
     }
 
     public void deleteMember(long memberId) {
         // TODO should business logic
+
+        throw new BusinessLogicException(ExceptionCode.NOT_IMPLEMENTATION);
     }
 }
