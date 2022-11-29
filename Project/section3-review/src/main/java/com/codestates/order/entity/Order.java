@@ -1,5 +1,6 @@
 package com.codestates.order.entity;
 
+import com.codestates.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,14 @@ public class Order {
 
     @Column(nullable = false, name = "LAST_MODIFIED_AT")
     private LocalDateTime modifiedAt = LocalDateTime.now();
+
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
+
+    public void addMember(Member member) {
+        this.member = member;
+    }
 
     public enum OrderStatus {
         ORDER_REQUEST(1, "주문 요청"),
