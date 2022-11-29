@@ -1,4 +1,4 @@
-package com.codestates.basic;
+package com.codestates.jpa.basic;
 
 import com.codestates.member.entity.Member;
 import org.springframework.boot.CommandLineRunner;
