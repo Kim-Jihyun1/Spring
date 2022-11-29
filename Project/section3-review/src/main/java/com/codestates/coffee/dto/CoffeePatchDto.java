@@ -1,5 +1,6 @@
 package com.codestates.coffee.dto;
 
+import com.codestates.coffee.entity.Coffee;
 import com.codestates.validator.NotSpace;
 import org.hibernate.validator.constraints.Range;
 
@@ -17,35 +18,13 @@ public class CoffeePatchDto {
     private String engName;
     private Optional<@Range(min = 100, max = 50000) Integer> price = Optional.empty();
 
-    public long getCoffeeId() {
-        return coffeeId;
-    }
+    private Coffee.CoffeeStatus coffeeStatus;
 
     public void setCoffeeId(long coffeeId) {
         this.coffeeId = coffeeId;
     }
 
-    public String getKorName() {
-        return korName;
-    }
-
-    public void setKorName(String korName) {
-        this.korName = korName;
-    }
-
-    public String getEngName() {
-        return engName;
-    }
-
-    public void setEngName(String engName) {
-        this.engName = engName;
-    }
-
     public int getPrice() {
         return price.orElse(0);
-    }
-
-    public void setPrice(Optional<Integer> price) {
-        this.price = price;
     }
 }

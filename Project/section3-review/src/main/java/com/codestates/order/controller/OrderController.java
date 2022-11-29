@@ -1,10 +1,15 @@
 package com.codestates.order.controller;
 
+import com.codestates.coffee.service.CoffeeService;
+import com.codestates.order.dto.OrderPatchDto;
 import com.codestates.order.dto.OrderPostDto;
 import com.codestates.order.dto.OrderResponseDto;
 import com.codestates.order.entity.Order;
 import com.codestates.order.mapper.OrderMapper;
 import com.codestates.order.service.OrderService;
+import com.codestates.response.MultiResponseDto;
+import com.codestates.response.SingleResponseDto;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,15 +23,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/v5/orders")
+@RequestMapping("/v11/orders")
 @Validated
 public class OrderController {
     private final OrderService orderService;
     private final OrderMapper mapper;
+    private final CoffeeService coffeeService;
 
-    public OrderController(OrderService orderService, OrderMapper mapper) {
+    public OrderController(OrderService orderService, OrderMapper mapper, CoffeeService coffeeService) {
         this.orderService = orderService;
         this.mapper = mapper;
+        this.coffeeService = coffeeService;
     }
 
     // 회원이 주문한 커피 주문 정보 등록
@@ -34,7 +41,21 @@ public class OrderController {
     public ResponseEntity postOrder(@Valid @RequestBody OrderPostDto orderPostDto) {
         Order order = orderService.createOrder(mapper.orderPostDtoToOrder(orderPostDto));
 
-        return new ResponseEntity<>(mapper.orderToOrderResponseDto(order), HttpStatus.CREATED);
+        // TODO JPA에 맞춰서 커피 정보 변경
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(mapper.orderToOrderResponseDto(order, null)), HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{order-id}")
+    public ResponseEntity patchOrder(@PathVariable("order-id") @Positive long orderId,
+                                     @Valid @RequestBody OrderPatchDto orderPatchDto) {
+        orderPatchDto.setOrderId(orderId);
+        Order order =
+                orderService.updateOrder(mapper.orderPatchDtoToOrder(orderPatchDto));
+
+        // TODO JPA에 맞춰서 coffee 정보 변경
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(mapper.orderToOrderResponseDto(order, null)), HttpStatus.OK);
     }
 
     // 특정 주문 정보 조회
@@ -42,25 +63,28 @@ public class OrderController {
     public ResponseEntity getOrder(@PathVariable("order-id") @Positive long orderId) {
         Order order = orderService.findOrder(orderId);
 
-        return new ResponseEntity<>(mapper.orderToOrderResponseDto(order), HttpStatus.OK);
+        // TODO JPA에 맞춰서 변경
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(mapper.orderToOrderResponseDto(order, null)), HttpStatus.OK);
     }
 
     // 전체 주문 목록 조회
     @GetMapping
-    public ResponseEntity getOrders() {
-        List<Order> orders = orderService.findOrders();
+    public ResponseEntity getOrders(@Positive @RequestParam int page,
+                                    @Positive @RequestParam int size) {
+        Page<Order> pageOrders = orderService.findOrders(page - 1, size);
 
-        List<OrderResponseDto> response = orders.stream()
-                .map(order -> mapper.orderToOrderResponseDto(order))
-                .collect(Collectors.toList());
+        List<Order> orders = pageOrders.getContent();
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        // TODO JPA에 맞춰서 주문 커피 정보 추가
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(mapper.ordersToOrderResponseDtos(orders), pageOrders), HttpStatus.OK);
     }
 
     // 주문 정보 삭제
     @DeleteMapping("/{order-id}")
-    public void cancelOrder(@PathVariable("order-id") long orderId) {
-        System.out.println("# cancel order");
-        orderService.cancelOrder();
+    public ResponseEntity cancelOrder(@PathVariable("order-id") @Positive long orderId) {
+        orderService.cancelOrder(orderId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
