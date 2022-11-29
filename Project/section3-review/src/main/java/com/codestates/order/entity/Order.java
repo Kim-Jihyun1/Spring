@@ -40,6 +40,7 @@ public class Order {
         this.member = member;
     }
 
+    // 주문 상태
     public enum OrderStatus {
         ORDER_REQUEST(1, "주문 요청"),
         ORDER_CONFIRM(2, "주문 확정"),

@@ -1,5 +1,6 @@
 package com.codestates.member.entity;
 
+import com.codestates.order.entity.Order;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter // Member 클래스 내부적으로 getter, setter 메서드가 작성되어 있다
@@ -27,14 +30,19 @@ public class Member {
     @Column(length = 13, nullable = false, unique = true)
     private String phone;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now(); // 회원 정보가 등록될 때의 시간과 날짜를 매핑하기 위한 필드
+    // 회원 상태를 저장하기 위한 enum 필드
+    @Enumerated(value = EnumType.STRING)
+    @Column(length = 20, nullable = false)
+    private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE; // 회원이 처음 등록될 때의 디폴트 값
 
-    @Column(nullable = false, name = "LAST_MODIFIED_AT") // name 애트리뷰트를 생략하면 기본 값으로 엔티티 클래스 필드명으로 칼럼이 생성됨
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(nullable = false, name = "LAST_MODIFIED_AT")
     private LocalDateTime modifiedAt = LocalDateTime.now();
 
-    @Transient // JPA가 테이블 칼럼과 매핑하지 않겠다는 의미로 인식 (주로 임시 데이터를 메모리에서 사용하기 위함)
-    private String age;
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders = new ArrayList<>();
 
     public Member(String email) {
         this.email = email;
@@ -44,5 +52,23 @@ public class Member {
         this.email = email;
         this.name = name;
         this.phone = phone;
+    }
+
+    public void addOrder(Order order) {
+        orders.add(order);
+    }
+
+    // 회원 상태
+    public enum MemberStatus {
+        MEMBER_ACTIVE("활동중"),
+        MEMBER_SLEEP("휴면 상태"),
+        MEMBER_QUIT("탈퇴 상태");
+
+        @Getter
+        private String status;
+
+        MemberStatus(String status) {
+            this.status = status;
+        }
     }
 }
