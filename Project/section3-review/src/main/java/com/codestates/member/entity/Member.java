@@ -1,6 +1,8 @@
 package com.codestates.member.entity;
 
+import com.codestates.audit.Auditable;
 import com.codestates.order.entity.Order;
+import com.codestates.stamp.Stamp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,12 +13,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+//@AllArgsConstructor // 파라미터가 없는 기본 생성자를 자동으로 생성
 @Getter
 @Setter // Member 클래스 내부적으로 getter, setter 메서드가 작성되어 있다
 @NoArgsConstructor // Member 클래스에 추가된 모든 멤버 변수를 피라미터로 갖는 Member 생성자를 자동으로 생성
-//@AllArgsConstructor // 파라미터가 없는 기본 생성자를 자동으로 생성
 @Entity
-public class Member {
+public class Member extends Auditable {
     @Id // @Entity 와 @Id를 추가하면 JPA에서 해당 클래스를 엔티티 클래스로 인식
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
@@ -41,8 +43,30 @@ public class Member {
     @Column(nullable = false, name = "LAST_MODIFIED_AT")
     private LocalDateTime modifiedAt = LocalDateTime.now();
 
+    // Member와 Order 간의 1:N 연관관계 매핑
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
+
+    // Member와 Stamp 간의 1:1 연관관계 매핑
+    @OneToOne(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private Stamp stamp;
+
+    // Member와 Order 간의 양방향 연관관계 매핑
+    public void setOrder(Order order) {
+        orders.add(order);
+
+        if (order.getMember() != this) {
+            order.setMember(this);
+        }
+    }
+
+    // Member와 Stamp 간의 연관관계 매핑
+    public void setStamp(Stamp stamp) {
+        this.stamp = stamp;
+        if (stamp.getMember() != this) {
+            stamp.setMember(this);
+        }
+    }
 
     public Member(String email) {
         this.email = email;
@@ -54,9 +78,9 @@ public class Member {
         this.phone = phone;
     }
 
-    public void addOrder(Order order) {
-        orders.add(order);
-    }
+//    public void addOrder(Order order) {
+//        orders.add(order);
+//    }
 
     // 회원 상태
     public enum MemberStatus {

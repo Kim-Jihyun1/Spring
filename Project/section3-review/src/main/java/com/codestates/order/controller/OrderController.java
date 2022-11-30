@@ -1,9 +1,8 @@
 package com.codestates.order.controller;
 
-import com.codestates.coffee.service.CoffeeService;
+import com.codestates.member.service.MemberService;
 import com.codestates.order.dto.OrderPatchDto;
 import com.codestates.order.dto.OrderPostDto;
-import com.codestates.order.dto.OrderResponseDto;
 import com.codestates.order.entity.Order;
 import com.codestates.order.mapper.OrderMapper;
 import com.codestates.order.service.OrderService;
@@ -17,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v11/orders")
@@ -28,12 +24,12 @@ import java.util.stream.Collectors;
 public class OrderController {
     private final OrderService orderService;
     private final OrderMapper mapper;
-    private final CoffeeService coffeeService;
+    private final MemberService memberService;
 
-    public OrderController(OrderService orderService, OrderMapper mapper, CoffeeService coffeeService) {
+    public OrderController(OrderService orderService, OrderMapper mapper, MemberService memberService) {
         this.orderService = orderService;
         this.mapper = mapper;
-        this.coffeeService = coffeeService;
+        this.memberService = memberService;
     }
 
     // 회원이 주문한 커피 주문 정보 등록

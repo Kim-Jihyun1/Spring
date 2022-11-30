@@ -8,10 +8,12 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@Getter
+@Getter // 클래스 레벨에 @Getter / @Setter 추가하면 모든 필드에 getter/setter 메서드가 생김
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor // 파라미터가 없는 디폴트 생성자 추가
 @Entity(name = "ORDERS")
 public class Order {
     @Id
@@ -36,6 +38,17 @@ public class Order {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    // Order와 OrderCoffee 간의 1:N 연관관계 매핑
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+    private List<OrderCoffee> orderCoffees = new ArrayList<>();
+
+    // Order와 Member 간의 양방향 연관관계 매핑
+    public void setMember(Member member) {
+        this.member = member;
+        if (!this.member.getOrders().contains(this)) {
+            this.member.getOrders().add(this);
+        }
+    }
     public void addMember(Member member) {
         this.member = member;
     }

@@ -1,12 +1,13 @@
 package com.codestates.member.controller;
 
+import com.codestates.member.dto.MemberDto;
 import com.codestates.response.MultiResponseDto;
 import com.codestates.response.SingleResponseDto;
 import com.codestates.member.dto.MemberPatchDto;
-import com.codestates.member.dto.MemberPostDto;
 import com.codestates.member.entity.Member;
 import com.codestates.member.mapper.MemberMapper;
 import com.codestates.member.service.MemberService;
+import com.codestates.stamp.Stamp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v8/members")
+@RequestMapping("/v11/members")
 @Validated // 유효성 검증
 @Slf4j
 public class MemberController {
@@ -34,11 +35,14 @@ public class MemberController {
 
     // 회원 정보 등록
     @PostMapping
-    public ResponseEntity postMember(@Valid @RequestBody MemberPostDto memberDto) {
-        Member member = memberService.createMember(mapper.memberPostDtoToMember(memberDto));
+    public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
+        Member member = mapper.memberPostDtoToMember(requestBody);
+        member.setStamp(new Stamp());
+
+        Member createdMember = memberService.createMember(member);
 
         return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.memberToMemberResponseDto(member)),
+                new SingleResponseDto<>(mapper.memberToMemberResponseDto(createdMember)),
                 HttpStatus.CREATED);
     }
 
@@ -46,10 +50,10 @@ public class MemberController {
     @PatchMapping("/{member-id}")
     public ResponseEntity patchMember(
             @PathVariable("member-id") @Positive long memberId,
-            @Valid @RequestBody MemberPatchDto memberPatchDto) {
-        memberPatchDto.setMemberId(memberId);
+            @Valid @RequestBody MemberPatchDto requestBody) {
+        requestBody.setMemberId(memberId);
 
-        Member member = memberService.updateMember(mapper.memberPatchDtoToMember(memberPatchDto));
+        Member member = memberService.updateMember(mapper.memberPatchDtoToMember(requestBody));
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.memberToMemberResponseDto(member)),
@@ -58,13 +62,12 @@ public class MemberController {
 
     // 특정 회원 정보 조회
     @GetMapping("/{member-id}")
-    public ResponseEntity getMember(
-            @PathVariable("member-id") @Positive long memberId) {
+    public ResponseEntity getMember(@PathVariable("member-id") @Positive long memberId) {
         Member member = memberService.findMember(memberId);
 
         return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.memberToMemberResponseDto(member))
-                , HttpStatus.OK);
+                new SingleResponseDto<>(mapper.memberToMemberResponseDto(member)),
+                HttpStatus.OK);
     }
 
     // 전체 회원 목록 조회
@@ -75,8 +78,7 @@ public class MemberController {
         List<Member> members = pageMembers.getContent();
 
         return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.membersToMemberResponseDtos(members),
-                        pageMembers),
+                new MultiResponseDto<>(mapper.membersToMemberResponseDtos(members), pageMembers),
                 HttpStatus.OK);
     }
 

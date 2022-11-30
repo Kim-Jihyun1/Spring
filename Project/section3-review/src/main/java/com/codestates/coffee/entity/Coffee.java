@@ -1,5 +1,6 @@
 package com.codestates.coffee.entity;
 
+import com.codestates.order.entity.OrderCoffee;
 import com.codestates.values.Money;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,16 +21,16 @@ public class Coffee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long coffeeId;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100, nullable = false)
     private String korName;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100, nullable = false)
     private String engName;
 
     @Column(nullable = false)
     private int price;
 
-    @Column(nullable = false, length = 3, unique = true)
+    @Column(length = 3, nullable = false, unique = true)
     private String coffeeCode;
 
     // 커피 상태를 저장하기 위한 enum 필드
@@ -40,6 +43,18 @@ public class Coffee {
 
     @Column(nullable = false, name = "LAST_MODIFIED_AT")
     private LocalDateTime modifiedAt = LocalDateTime.now();
+
+    // Coffee와 OrderCoffee 간의 1:N 연관관계 매핑
+    @OneToMany(mappedBy = "coffee")
+    private List<OrderCoffee> orderCoffees = new ArrayList<>();
+
+    // Coffee와 OrderCoffee 간의 양방향 연관관계 매핑
+    public void setOrderCoffee(OrderCoffee orderCoffee) {
+        this.orderCoffees.add(orderCoffee);
+        if (orderCoffee.getCoffee() != this) {
+            orderCoffee.setCoffee(this);
+        }
+    }
 
     // 커피 상태
     public enum CoffeeStatus {

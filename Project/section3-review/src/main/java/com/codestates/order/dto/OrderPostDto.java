@@ -1,27 +1,18 @@
 package com.codestates.order.dto;
 
-import javax.validation.constraints.Positive;
+import lombok.Getter;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import java.util.List;
+
+@Getter
 public class OrderPostDto {
     @Positive
     private long memberId;
 
-    @Positive
-    private long coffeeId;
-
-    public long getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-
-    public long getCoffeeId() {
-        return coffeeId;
-    }
-
-    public void setCoffeeId(Long coffeeId) {
-        this.coffeeId = coffeeId;
-    }
+    @NotNull
+    @Valid
+    private List<OrderCoffeeDto> orderCoffees;
 }
