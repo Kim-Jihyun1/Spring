@@ -8,14 +8,16 @@ group = 'com.codestates'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
-tasks.withType(JavaCompile) {
-	options.encoding = 'UTF-8'
-}
-
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+}
+
+bootJar { enabled = true }
+
+ext {
+	mapstructVersion = "1.4.1.Final"
 }
 
 repositories {
@@ -32,6 +34,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 }
 
 tasks.named('test') {

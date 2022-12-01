@@ -51,7 +51,7 @@ public class OrderController {
 
         // TODO JPA에 맞춰서 coffee 정보 변경
         return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.orderToOrderResponseDto(order, null)), HttpStatus.OK);
+                new SingleResponseDto<>(mapper.orderToOrderResponseDto(order)), HttpStatus.OK);
     }
 
     // 특정 주문 정보 조회
@@ -61,7 +61,7 @@ public class OrderController {
 
         // TODO JPA에 맞춰서 변경
         return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.orderToOrderResponseDto(order, null)), HttpStatus.OK);
+                new SingleResponseDto<>(mapper.orderToOrderResponseDto(order)), HttpStatus.OK);
     }
 
     // 전체 주문 목록 조회

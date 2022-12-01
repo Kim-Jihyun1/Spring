@@ -22,7 +22,6 @@ public interface OrderMapper {
     default Order orderPostDtoToOrder(OrderPostDto orderPostDto) {
         Order order = new Order();
         Member member = new Member();
-
         member.setMemberId(orderPostDto.getMemberId());
 
         List<OrderCoffee> orderCoffees = orderPostDto.getOrderCoffees().stream()
@@ -33,8 +32,10 @@ public interface OrderMapper {
                     orderCoffee.setOrder(order);
                     orderCoffee.setCoffee(coffee);
                     orderCoffee.setQuantity(orderCoffeeDto.getQuantity());
+
                     return orderCoffee;
-                }).collect(Collectors.toList());
+                })
+                .collect(Collectors.toList());
         order.setMember(member);
         order.setOrderCoffees(orderCoffees);
 
@@ -48,5 +49,5 @@ public interface OrderMapper {
     @Mapping(source = "coffee.korName", target = "korName")
     @Mapping(source = "coffee.engName", target = "engName")
     @Mapping(source = "coffee.price.value", target = "price")
-    OrderCoffeeResponseDto orderCoffeeToOrderCoffeeResponseDto(OrderCoffee orderCoffee);
+    OrderCoffeeResponseDto orderCoffeeToOrderResponseDto(OrderCoffee orderCoffee);
 }

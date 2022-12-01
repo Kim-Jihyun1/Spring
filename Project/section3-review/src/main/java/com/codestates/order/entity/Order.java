@@ -28,12 +28,6 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.ORDER_REQUEST;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(nullable = false, name = "LAST_MODIFIED_AT")
-    private LocalDateTime modifiedAt = LocalDateTime.now();
-
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
@@ -48,9 +42,6 @@ public class Order {
         if (!this.member.getOrders().contains(this)) {
             this.member.getOrders().add(this);
         }
-    }
-    public void addMember(Member member) {
-        this.member = member;
     }
 
     // 주문 상태
