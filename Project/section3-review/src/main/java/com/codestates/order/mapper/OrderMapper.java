@@ -49,5 +49,5 @@ public interface OrderMapper {
     @Mapping(source = "coffee.korName", target = "korName")
     @Mapping(source = "coffee.engName", target = "engName")
     @Mapping(source = "coffee.price.value", target = "price")
-    OrderCoffeeResponseDto orderCoffeeToOrderResponseDto(OrderCoffee orderCoffee);
+    OrderCoffeeResponseDto orderCoffeeToOrderCoffeeResponseDto(OrderCoffee orderCoffee);
 }
