@@ -2,11 +2,13 @@ package com.codestates.coffee.dto;
 
 import com.codestates.coffee.entity.Coffee;
 import com.codestates.validator.NotSpace;
+import lombok.Getter;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Pattern;
 import java.util.Optional;
 
+@Getter
 public class CoffeePatchDto {
     private long coffeeId;
 

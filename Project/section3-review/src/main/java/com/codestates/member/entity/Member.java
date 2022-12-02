@@ -37,11 +37,11 @@ public class Member extends Auditable {
     @Column(length = 20, nullable = false)
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE; // 회원이 처음 등록될 때의 디폴트 값
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(nullable = false, name = "LAST_MODIFIED_AT")
-    private LocalDateTime modifiedAt = LocalDateTime.now();
+//    @Column(nullable = false)
+//    private LocalDateTime createdAt = LocalDateTime.now();
+//
+//    @Column(nullable = false, name = "LAST_MODIFIED_AT")
+//    private LocalDateTime modifiedAt = LocalDateTime.now();
 
     // Member와 Order 간의 1:N 연관관계 매핑
     @OneToMany(mappedBy = "member")

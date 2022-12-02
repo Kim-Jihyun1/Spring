@@ -50,7 +50,7 @@ public class MemberController {
     @PatchMapping("/{member-id}")
     public ResponseEntity patchMember(
             @PathVariable("member-id") @Positive long memberId,
-            @Valid @RequestBody MemberPatchDto requestBody) {
+            @Valid @RequestBody MemberDto.Patch requestBody) {
         requestBody.setMemberId(memberId);
 
         Member member = memberService.updateMember(mapper.memberPatchDtoToMember(requestBody));

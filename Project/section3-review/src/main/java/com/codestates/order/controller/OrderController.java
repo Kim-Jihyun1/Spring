@@ -39,7 +39,7 @@ public class OrderController {
 
         // TODO JPA에 맞춰서 커피 정보 변경
         return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.orderToOrderResponseDto(order, null)), HttpStatus.CREATED);
+                new SingleResponseDto<>(mapper.orderToOrderResponseDto(order)), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{order-id}")

@@ -1,5 +1,6 @@
 package com.codestates.order.entity;
 
+import com.codestates.audit.Auditable;
 import com.codestates.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor // 파라미터가 없는 디폴트 생성자 추가
 @Entity(name = "ORDERS")
-public class Order {
+public class Order extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long orderId;

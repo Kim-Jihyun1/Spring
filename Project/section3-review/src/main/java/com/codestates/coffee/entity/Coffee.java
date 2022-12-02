@@ -1,8 +1,9 @@
 package com.codestates.coffee.entity;
 
+import com.codestates.audit.Auditable;
 import com.codestates.order.entity.OrderCoffee;
+
 import com.codestates.values.Money;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Coffee {
+public class Coffee extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long coffeeId;
@@ -27,8 +28,9 @@ public class Coffee {
     @Column(length = 100, nullable = false)
     private String engName;
 
-    @Column(nullable = false)
-    private int price;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "price", nullable = false))
+    private Money price;
 
     @Column(length = 3, nullable = false, unique = true)
     private String coffeeCode;
@@ -38,11 +40,11 @@ public class Coffee {
     @Column(length = 20, nullable = false)
     private CoffeeStatus coffeeStatus = CoffeeStatus.COFFEE_FOR_SALE;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(nullable = false, name = "LAST_MODIFIED_AT")
-    private LocalDateTime modifiedAt = LocalDateTime.now();
+//    @Column(nullable = false)
+//    private LocalDateTime createdAt = LocalDateTime.now();
+//
+//    @Column(nullable = false, name = "LAST_MODIFIED_AT")
+//    private LocalDateTime modifiedAt = LocalDateTime.now();
 
     // Coffee와 OrderCoffee 간의 1:N 연관관계 매핑
     @OneToMany(mappedBy = "coffee")

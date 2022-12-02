@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/v5/coffees")
+@RequestMapping("/v11/coffees")
 @Validated
 public class CoffeeController {
     private final CoffeeService coffeeService;
@@ -44,7 +44,7 @@ public class CoffeeController {
 
     // 커피 정보 수정
     @PatchMapping("/{coffee-id}")
-    public ResponseEntity patchCoffee(@PathVariable("coffee-id") long coffeeId,
+    public ResponseEntity patchCoffee(@PathVariable("coffee-id") @Positive long coffeeId,
                                       @Valid @RequestBody CoffeePatchDto coffeePatchDto) {
         coffeePatchDto.setCoffeeId(coffeeId);
         Coffee coffee = coffeeService.updateCoffee(mapper.coffeePatchDtoToCoffee(coffeePatchDto));
