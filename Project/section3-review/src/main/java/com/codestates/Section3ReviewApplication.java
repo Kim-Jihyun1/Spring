@@ -11,5 +11,4 @@ public class Section3ReviewApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(Section3ReviewApplication.class, args);
 	}
-
 }
