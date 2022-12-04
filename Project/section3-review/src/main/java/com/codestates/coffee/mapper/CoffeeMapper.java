@@ -11,13 +11,13 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CoffeeMapper {
-    @Mapping(source = "price", target = "price.value")
+//    @Mapping(source = "price", target = "price.value")
     Coffee coffeePostDtoToCoffee(CoffeePostDto coffeePostDto);
 
-    @Mapping(source = "price", target = "price.value")
+//    @Mapping(source = "price", target = "price.value")
     Coffee coffeePatchDtoToCoffee(CoffeePatchDto coffeePatchDto);
 
-    @Mapping(source = "price.value", target = "price")
+//    @Mapping(source = "price.value", target = "price")
     CoffeeResponseDto coffeeToCoffeeResponseDto(Coffee coffee);
 
     List<CoffeeResponseDto> coffeesToCoffeeResponseDtos(List<Coffee> coffees);

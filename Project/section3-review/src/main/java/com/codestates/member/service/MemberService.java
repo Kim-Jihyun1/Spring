@@ -1,5 +1,7 @@
 package com.codestates.member.service;
 
+import com.codestates.backup.BackupMemberService;
+import com.codestates.backup.entity.BackupMember;
 import com.codestates.exception.BusinessLogicException;
 import com.codestates.exception.ExceptionCode;
 import com.codestates.member.entity.Member;
@@ -9,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,24 +22,24 @@ import java.util.Optional;
 @Service
 @Transactional // 트랜잭션 적용
 public class MemberService {
+    private final BackupMemberService backupMemberService;
     private final MemberRepository memberRepository;
-    private final CustomBeanUtils<Member> beanUtils;
 
-    public MemberService(MemberRepository memberRepository, CustomBeanUtils<Member> beanUtils) {
+    public MemberService(BackupMemberService backupMemberService, MemberRepository memberRepository) {
+        this.backupMemberService = backupMemberService;
         this.memberRepository = memberRepository;
-        this.beanUtils = beanUtils;
     }
 
+    @Transactional
     public Member createMember(Member member) {
         // 이미 등록된 이메일인지 확인
         verifyExistsEmail(member.getEmail());
-        Member resultMember = memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
 
-        if (true) {
-            throw new RuntimeException("Rollback test");
-        }
+        backupMemberService.createBackupMember(
+                new BackupMember(member.getEmail(), member.getName(), member.getPhone()));
 
-        return resultMember;
+        return savedMember;
     }
 
     // 리펙토링 전
@@ -59,7 +62,7 @@ public class MemberService {
     }
 
     // 리펙토링 후
-    @Transactional(propagation = Propagation.REQUIRED) // 현재 진행 중인 트랜잭션이 존재하면 해당 트랜잭션을 사용함 (존재하지 않으면 새 트랜잭션을 생성)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE) // 현재 진행 중인 트랜잭션이 존재하면 해당 트랜잭션을 사용함 (존재하지 않으면 새 트랜잭션을 생성)
     public Member updateMember(Member member) {
         Member findMember = findVerifiedMember(member.getMemberId());
 
@@ -91,6 +94,7 @@ public class MemberService {
         memberRepository.delete(findMember);
     }
 
+    @Transactional(readOnly = true)
     public Member findVerifiedMember(long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
 

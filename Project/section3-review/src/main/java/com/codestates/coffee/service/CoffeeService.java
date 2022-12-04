@@ -8,10 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CoffeeService {
     private final CoffeeRepository coffeeRepository;
 
@@ -48,10 +50,12 @@ public class CoffeeService {
         return coffeeRepository.save(findCoffee);
     }
 
+    @Transactional(readOnly = true)
     public Coffee findCoffee(long coffeeId) {
         return findVerifiedCoffeeByQuery(coffeeId);
     }
 
+    @Transactional(readOnly = true)
     public Page<Coffee> findCoffees(int page, int size) {
         return coffeeRepository.findAll(PageRequest.of(page, size, Sort.by("coffeeId").descending()));
     }
@@ -61,6 +65,7 @@ public class CoffeeService {
         coffeeRepository.delete(coffee);
     }
 
+    @Transactional(readOnly = true)
     public Coffee findVerifiedCoffee(long coffeeId) {
         Optional<Coffee> optionalCoffee = coffeeRepository.findById(coffeeId);
         Coffee findCoffee =
@@ -70,6 +75,7 @@ public class CoffeeService {
         return findCoffee;
     }
 
+    @Transactional(readOnly = true)
     private void verifyExistCoffee(String coffeeCode) {
         Optional<Coffee> coffee = coffeeRepository.findByCoffeeCode(coffeeCode);
 

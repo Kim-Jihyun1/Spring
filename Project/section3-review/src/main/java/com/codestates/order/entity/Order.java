@@ -40,8 +40,12 @@ public class Order extends Auditable {
     // Order와 Member 간의 양방향 연관관계 매핑
     public void setMember(Member member) {
         this.member = member;
-        if (!this.member.getOrders().contains(this)) {
-            this.member.getOrders().add(this);
+    }
+
+    public void addOrderCoffee(OrderCoffee orderCoffee) {
+        this.orderCoffees.add(orderCoffee);
+        if (orderCoffee.getOrder() != this) {
+            orderCoffee.addOrder(this);
         }
     }
 

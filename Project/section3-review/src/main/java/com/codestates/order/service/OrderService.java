@@ -38,8 +38,8 @@ public class OrderService {
 
         updateStamp(savedOrder);
 
-        throw new RuntimeException("rollback test");
-//        return savedOrder;
+//        throw new RuntimeException("rollback test");
+        return savedOrder;
     }
 
     // 주문 정보 수정

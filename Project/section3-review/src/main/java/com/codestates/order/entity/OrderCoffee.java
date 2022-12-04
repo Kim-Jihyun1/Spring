@@ -31,7 +31,7 @@ public class OrderCoffee extends Auditable {
     private Coffee coffee;
 
     // OrderCoffee와 Order 간의 양방향 연관관계 매핑
-    public void setOrder(Order order) {
+    public void addOrder(Order order) {
         this.order = order;
         if (!this.order.getOrderCoffees().contains(this)) {
             this.order.getOrderCoffees().add(this);
@@ -39,10 +39,10 @@ public class OrderCoffee extends Auditable {
     }
 
     // OrderCoffee와 Coffee 간의 양방향 연관관계 매핑
-    public void setCoffee(Coffee coffee) {
+    public void addCoffee(Coffee coffee) {
         this.coffee = coffee;
         if (!this.coffee.getOrderCoffees().contains(this)) {
-            this.coffee.setOrderCoffee(this);
+            this.coffee.addOrderCoffee(this);
         }
     }
 }

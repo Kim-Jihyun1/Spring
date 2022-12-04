@@ -2,24 +2,20 @@ package com.codestates.coffee.controller;
 
 import com.codestates.coffee.dto.CoffeePatchDto;
 import com.codestates.coffee.dto.CoffeePostDto;
-import com.codestates.coffee.dto.CoffeeResponseDto;
 import com.codestates.coffee.entity.Coffee;
 import com.codestates.coffee.mapper.CoffeeMapper;
 import com.codestates.coffee.service.CoffeeService;
-import com.codestates.response.MultiResponseDto;
-import com.codestates.response.SingleResponseDto;
+import com.codestates.dto.MultiResponseDto;
+import com.codestates.dto.SingleResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/v11/coffees")

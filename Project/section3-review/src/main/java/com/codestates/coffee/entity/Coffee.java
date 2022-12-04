@@ -28,9 +28,10 @@ public class Coffee extends Auditable {
     @Column(length = 100, nullable = false)
     private String engName;
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "price", nullable = false))
-    private Money price;
+//    @Embedded
+//    @AttributeOverride(name = "value", column = @Column(name = "price", nullable = false))
+    @Column(nullable = false)
+    private Integer price;
 
     @Column(length = 3, nullable = false, unique = true)
     private String coffeeCode;
@@ -51,10 +52,10 @@ public class Coffee extends Auditable {
     private List<OrderCoffee> orderCoffees = new ArrayList<>();
 
     // Coffee와 OrderCoffee 간의 양방향 연관관계 매핑
-    public void setOrderCoffee(OrderCoffee orderCoffee) {
+    public void addOrderCoffee(OrderCoffee orderCoffee) {
         this.orderCoffees.add(orderCoffee);
         if (orderCoffee.getCoffee() != this) {
-            orderCoffee.setCoffee(this);
+            orderCoffee.addCoffee(this);
         }
     }
 

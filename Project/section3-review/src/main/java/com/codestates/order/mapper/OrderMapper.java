@@ -29,8 +29,8 @@ public interface OrderMapper {
                     OrderCoffee orderCoffee = new OrderCoffee();
                     Coffee coffee = new Coffee();
                     coffee.setCoffeeId(orderCoffeeDto.getCoffeeId());
-                    orderCoffee.setOrder(order);
-                    orderCoffee.setCoffee(coffee);
+                    orderCoffee.addOrder(order);
+                    orderCoffee.addCoffee(coffee);
                     orderCoffee.setQuantity(orderCoffeeDto.getQuantity());
 
                     return orderCoffee;
@@ -42,12 +42,41 @@ public interface OrderMapper {
         return order;
     }
 
-    @Mapping(source = "member.memberId", target = "memberId")
-    OrderResponseDto orderToOrderResponseDto(Order order);
+    default OrderResponseDto orderToOrderResponseDto(Order order){
+        List<OrderCoffee> orderCoffees = order.getOrderCoffees();
 
-    @Mapping(source = "coffee.coffeeId", target = "coffeeId")
-    @Mapping(source = "coffee.korName", target = "korName")
-    @Mapping(source = "coffee.engName", target = "engName")
-    @Mapping(source = "coffee.price.value", target = "price")
-    OrderCoffeeResponseDto orderCoffeeToOrderCoffeeResponseDto(OrderCoffee orderCoffee);
+        OrderResponseDto orderResponseDto = new OrderResponseDto();
+        orderResponseDto.setOrderId(order.getOrderId());
+        orderResponseDto.setMember(order.getMember());
+        orderResponseDto.setOrderStatus(order.getOrderStatus());
+        orderResponseDto.setCreatedAt(order.getCreatedAt());
+        orderResponseDto.setOrderCoffees(
+                orderCoffeesToOrderCoffeeResponseDtos(orderCoffees)
+        );
+
+        return orderResponseDto;
+    }
+
+    default List<OrderCoffeeResponseDto> orderCoffeesToOrderCoffeeResponseDtos(
+            List<OrderCoffee> orderCoffees) {
+        return orderCoffees
+                .stream()
+                .map(orderCoffee -> OrderCoffeeResponseDto
+                        .builder()
+                        .coffeeId(orderCoffee.getCoffee().getCoffeeId())
+                        .quantity(orderCoffee.getQuantity())
+                        .price(orderCoffee.getCoffee().getPrice())
+                        .korName(orderCoffee.getCoffee().getKorName())
+                        .engName(orderCoffee.getCoffee().getEngName())
+                        .build())
+                .collect(Collectors.toList());
+    }
+//    @Mapping(source = "member.memberId", target = "memberId")
+//    OrderResponseDto orderToOrderResponseDto(Order order);
+//
+//    @Mapping(source = "coffee.coffeeId", target = "coffeeId")
+//    @Mapping(source = "coffee.korName", target = "korName")
+//    @Mapping(source = "coffee.engName", target = "engName")
+//    @Mapping(source = "coffee.price.value", target = "price")
+//    OrderCoffeeResponseDto orderCoffeeToOrderCoffeeResponseDto(OrderCoffee orderCoffee);
 }
