@@ -1,12 +1,12 @@
 package com.codestates.member.service;
 
-import com.codestates.backup.BackupMemberService;
-import com.codestates.backup.entity.BackupMember;
 import com.codestates.exception.BusinessLogicException;
 import com.codestates.exception.ExceptionCode;
+import com.codestates.helper.event.MemberRegistrationEvent;
 import com.codestates.member.entity.Member;
 import com.codestates.member.repository.MemberRepository;
 import com.codestates.utils.CustomBeanUtils;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -15,19 +15,19 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional // 트랜잭션 적용
 public class MemberService {
-    private final BackupMemberService backupMemberService;
     private final MemberRepository memberRepository;
+    private final ApplicationEventPublisher publisher;
+    private final CustomBeanUtils<Member> beanUtils;
 
-    public MemberService(BackupMemberService backupMemberService, MemberRepository memberRepository) {
-        this.backupMemberService = backupMemberService;
+    public MemberService(MemberRepository memberRepository, ApplicationEventPublisher publisher, CustomBeanUtils<Member> beanUtils) {
         this.memberRepository = memberRepository;
+        this.publisher = publisher;
+        this.beanUtils = beanUtils;
     }
 
     @Transactional
@@ -36,13 +36,11 @@ public class MemberService {
         verifyExistsEmail(member.getEmail());
         Member savedMember = memberRepository.save(member);
 
-        backupMemberService.createBackupMember(
-                new BackupMember(member.getEmail(), member.getName(), member.getPhone()));
+        publisher.publishEvent(new MemberRegistrationEvent(savedMember));
 
         return savedMember;
     }
 
-    // 리펙토링 전
     public Member updateMemberOld(Member member) {
         Member findMember = findVerifiedMember(member.getMemberId());
 
@@ -61,20 +59,22 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
-    // 리펙토링 후
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE) // 현재 진행 중인 트랜잭션이 존재하면 해당 트랜잭션을 사용함 (존재하지 않으면 새 트랜잭션을 생성)
     public Member updateMember(Member member) {
         Member findMember = findVerifiedMember(member.getMemberId());
 
-//        beanUtils.copyNonNullProperties(member, findMember);
-        Optional.ofNullable(member.getName())
-                .ifPresent(name -> findMember.setName(name));
-        Optional.ofNullable(member.getPhone())
-                .ifPresent(phone -> findMember.setPhone(phone));
-        Optional.ofNullable(member.getMemberStatus())
-                .ifPresent(memberStatus -> findMember.setMemberStatus(memberStatus));
+        // 리팩토링 전
+//        Optional.ofNullable(member.getName())
+//                .ifPresent(name -> findMember.setName(name));
+//        Optional.ofNullable(member.getPhone())
+//                .ifPresent(phone -> findMember.setPhone(phone));
+//        Optional.ofNullable(member.getMemberStatus())
+//                .ifPresent(memberStatus -> findMember.setMemberStatus(memberStatus));
 
-        return memberRepository.save(findMember);
+        // 리팩토링 후
+        Member updateMember = beanUtils.copyNonNullProperties(member, findMember);
+
+        return memberRepository.save(updateMember);
     }
 
     @Transactional(readOnly = true) // 읽기 전용 트랜잭션

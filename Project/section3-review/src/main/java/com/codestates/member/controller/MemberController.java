@@ -2,8 +2,7 @@ package com.codestates.member.controller;
 
 import com.codestates.dto.MultiResponseDto;
 import com.codestates.dto.SingleResponseDto;
-import com.codestates.member.dto.MemberPatchDto;
-import com.codestates.member.dto.MemberPostDto;
+import com.codestates.member.dto.MemberDto;
 import com.codestates.member.entity.Member;
 import com.codestates.member.mapper.MemberMapper;
 import com.codestates.member.service.MemberService;
@@ -35,8 +34,8 @@ public class MemberController {
 
     // 회원 정보 등록
     @PostMapping
-    public ResponseEntity postMember(@Valid @RequestBody MemberPostDto memberPostDto) {
-        Member member = mapper.memberPostDtoToMember(memberPostDto);
+    public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
+        Member member = mapper.memberPostDtoToMember(requestBody);
         member.setStamp(new Stamp());
 
         Member createdMember = memberService.createMember(member);
@@ -50,10 +49,10 @@ public class MemberController {
     @PatchMapping("/{member-id}")
     public ResponseEntity patchMember(
             @PathVariable("member-id") @Positive long memberId,
-            @Valid @RequestBody MemberPatchDto memberPatchDto) {
-        memberPatchDto.setMemberId(memberId);
+            @Valid @RequestBody MemberDto.Patch requestBody) {
+        requestBody.setMemberId(memberId);
 
-        Member member = memberService.updateMember(mapper.memberPatchDtoToMember(memberPatchDto));
+        Member member = memberService.updateMember(mapper.memberPatchDtoToMember(requestBody));
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.memberToMemberResponseDto(member)),
