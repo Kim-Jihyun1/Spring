@@ -10,8 +10,15 @@ public class HelloJUnitTest {
     @Test
     public void assertionTest() {
         String expected = "Hello, JUnit";
-        String actual = "Hello, JUnit";
+        String actual = "Hello, World";
 
         assertEquals(expected, actual);
     }
 }
+/*
+실행 결과: failed
+
+expected: <Hello, JUnit> but was: <Hello, World>
+Expected :Hello, JUnit
+Actual   :Hello, World
+ */
