@@ -7,8 +7,8 @@ import java.util.List;
 
 public class StampCalculatorTestWithoutJUnit {
     public static void main(String[] args) {
-        calculateStampCountTest();
-        calculateEarnedStampCountTest();
+        calculateStampCountTest(); // 첫 번째 단위 테스트
+        calculateEarnedStampCountTest(); // 두 번째 단위 테스트
     }
 
     public static void calculateStampCountTest() {
@@ -35,10 +35,9 @@ public class StampCalculatorTestWithoutJUnit {
 
         order.setOrderCoffees(List.of(orderCoffee1, orderCoffee2));
 
-        int expected = orderCoffee1.getQuantity() + orderCoffee2.getQuantity();
-
         // when
         int actual = StampCalculator.calculateEarnedStampCount(order);
+        int expected = orderCoffee1.getQuantity() + orderCoffee2.getQuantity();
 
         // then
         System.out.println(expected == actual);
