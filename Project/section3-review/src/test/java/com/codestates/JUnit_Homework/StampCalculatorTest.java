@@ -1,4 +1,4 @@
-package com.codestates.homework;
+package com.codestates.JUnit_Homework;
 
 import com.codestates.helper.StampCalculator;
 import com.codestates.order.entity.Order;
