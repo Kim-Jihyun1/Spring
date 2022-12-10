@@ -1,6 +1,7 @@
 package com.codestates.member.dto;
 
 import com.codestates.member.entity.Member;
+import com.codestates.stamp.Stamp;
 import com.codestates.validator.NotSpace;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Pattern;
 
 public class MemberDto {
     @Getter
+    @AllArgsConstructor // 테스트를 위해 추가
     public static class Post {
         @NotBlank
         @Email
@@ -52,21 +54,18 @@ public class MemberDto {
         private String email;
         private String name;
         private String phone;
-        private String memberStatus;
-        private int stampCount;
+//        private String memberStatus;
+//        private int stampCount;
 
         // DTO 클래스에서 필드 매핑을 하면, DTO의 역할이 늘어남
-        /*
         private Member.MemberStatus memberStatus;
         private Stamp stamp;
 
         public String getMemberStatus() {
             return memberStatus.getStatus();
         }
-
         public int getStamp() {
             return stamp.getStampCount();
         }
-        */
     }
 }
