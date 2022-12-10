@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolationException;
 
 @Slf4j
-@RestControllerAdvice // Controller 클래스에서 발생하는 예외를 도맡아서 처리
+@RestControllerAdvice
 public class GlobalExceptionAdvice {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -37,11 +37,11 @@ public class GlobalExceptionAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity handleConstraintViolationException(BusinessLogicException e) {
-        System.out.println(e.getExceptionCode().getStatus());
-        System.out.println(e.getMessage());
+    public ResponseEntity handleBusinessLogicException(BusinessLogicException e) {
+        final ErrorResponse response = ErrorResponse.of(e.getExceptionCode());
 
-        return new ResponseEntity<>(HttpStatus.valueOf(e.getExceptionCode().getStatus()));
+        return new ResponseEntity<>(response, HttpStatus.valueOf(e.getExceptionCode()
+                .getStatus()));
     }
 
     @ExceptionHandler
@@ -80,7 +80,7 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException(Exception e) {
         log.error("# handle Exception", e);
-        // TODO 에러 로그를 기록하고 관리자에게 이메일이나 카카오톡 등으로 알려주는 로직이 있는게 좋다
+        // TODO 애플리케이션의 에러는 에러 로그를 로그에 기록하고, 관리자에게 이메일이나 카카오톡, 슬랙 등으로 알려주는 로직이 있는게 좋다.
 
         final ErrorResponse response = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR);
 

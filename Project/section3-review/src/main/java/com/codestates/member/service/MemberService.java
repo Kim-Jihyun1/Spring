@@ -2,10 +2,11 @@ package com.codestates.member.service;
 
 import com.codestates.exception.BusinessLogicException;
 import com.codestates.exception.ExceptionCode;
-import com.codestates.helper.event.MemberRegistrationEvent;
+import com.codestates.helper.event.MemberRegistrationApplicationEvent;
+//import com.codestates.helper.event.MemberRegistrationEvent;
 import com.codestates.member.entity.Member;
 import com.codestates.member.repository.MemberRepository;
-import com.codestates.utils.CustomBeanUtils;
+//import com.codestates.utils.CustomBeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,12 +23,12 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final ApplicationEventPublisher publisher;
-    private final CustomBeanUtils<Member> beanUtils;
+//    private final CustomBeanUtils<Member> beanUtils;
 
-    public MemberService(MemberRepository memberRepository, ApplicationEventPublisher publisher, CustomBeanUtils<Member> beanUtils) {
+    public MemberService(MemberRepository memberRepository, ApplicationEventPublisher publisher) { // , CustomBeanUtils<Member> beanUtils
         this.memberRepository = memberRepository;
         this.publisher = publisher;
-        this.beanUtils = beanUtils;
+//        this.beanUtils = beanUtils;
     }
 
     @Transactional
@@ -36,8 +37,7 @@ public class MemberService {
         verifyExistsEmail(member.getEmail());
         Member savedMember = memberRepository.save(member);
 
-        publisher.publishEvent(new MemberRegistrationEvent(savedMember));
-
+        publisher.publishEvent(new MemberRegistrationApplicationEvent(this, savedMember));
         return savedMember;
     }
 
@@ -64,17 +64,17 @@ public class MemberService {
         Member findMember = findVerifiedMember(member.getMemberId());
 
         // 리팩토링 전
-//        Optional.ofNullable(member.getName())
-//                .ifPresent(name -> findMember.setName(name));
-//        Optional.ofNullable(member.getPhone())
-//                .ifPresent(phone -> findMember.setPhone(phone));
-//        Optional.ofNullable(member.getMemberStatus())
-//                .ifPresent(memberStatus -> findMember.setMemberStatus(memberStatus));
+        Optional.ofNullable(member.getName())
+                .ifPresent(name -> findMember.setName(name));
+        Optional.ofNullable(member.getPhone())
+                .ifPresent(phone -> findMember.setPhone(phone));
+        Optional.ofNullable(member.getMemberStatus())
+                .ifPresent(memberStatus -> findMember.setMemberStatus(memberStatus));
 
         // 리팩토링 후
-        Member updateMember = beanUtils.copyNonNullProperties(member, findMember);
+//        Member updateMember = beanUtils.copyNonNullProperties(member, findMember);
 
-        return memberRepository.save(updateMember);
+        return memberRepository.save(findMember);
     }
 
     @Transactional(readOnly = true) // 읽기 전용 트랜잭션

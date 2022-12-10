@@ -25,7 +25,7 @@ public class MemberRegistrationEventListener {
 
     @Async
     @EventListener
-    public void listen(MemberRegistrationEvent event) throws Exception {
+    public void listen(MemberRegistrationApplicationEvent event) throws Exception {
         try {
             // 이메일 전송 시뮬레이션 (전송할 메시지를 생성했다고 가정)
             String message = "any email message";
