@@ -1,9 +1,9 @@
-package com.codestates.member.service.Mockito;
+package com.codestates.member.service;
 
 import com.codestates.member.entity.Member;
 import org.springframework.data.domain.Page;
 
-public interface MemberService {
+public interface MemberService2 {
     Member createMember(Member member);
     Member updateMember(Member member);
     Member findMember(long memberId);

@@ -32,7 +32,7 @@ public class MemberService {
 
     @Transactional
     public Member createMember(Member member) {
-        // 이미 등록된 이메일인지 확인
+        // 이미 등록된 이메일인지 확인 ( == DB에 존재하는 이메일인지 검증)
         verifyExistsEmail(member.getEmail());
         Member savedMember = memberRepository.save(member);
 
@@ -106,8 +106,11 @@ public class MemberService {
     }
 
     private void verifyExistsEmail(String email) {
+        // verifyExistsEmail() 메서드의 파라미터 email 전달 -> memberRepository.findByEmail(email)을 통해 DB에서 조회
+        // email을 조건으로 한 회원 정보가 있는지를 DB에서 조회
         Optional<Member> member = memberRepository.findByEmail(email);
 
+        // member 객체의 null 여부를 판단하는 비즈니스 로직
         if (member.isPresent())
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
     }
