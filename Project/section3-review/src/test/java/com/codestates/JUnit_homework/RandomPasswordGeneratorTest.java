@@ -1,4 +1,4 @@
-package com.codestates.JUnit_Homework;
+package com.codestates.JUnit_homework;
 
 import com.codestates.helper.RandomPasswordGenerator;
 import org.junit.jupiter.api.DisplayName;
