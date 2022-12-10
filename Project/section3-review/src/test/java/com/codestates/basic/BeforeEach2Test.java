@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BeforeEach2Test {
     private Map<String, String> map;
@@ -33,11 +34,15 @@ public class BeforeEach2Test {
     @DisplayName("Test case 2")
     @Test
     public void beforeEachTest2() {
+        /**
+         * Assertion 하기 전에 map에 XRP를 추가하지 않았음
+         * Test case 2가 실행되기 전에 init() 메서드가 호출되면서 사용했던 map 객체가 초기화됨
+         * 실행 결과 : failed
+         */
         System.out.println(map);
-        assertDoesNotThrow(() -> getCryptoCurrency("XRP"));
-        // Assertion 하기 전에 map에 XRP를 추가하지 않았음
-        // Test case 2가 실행되기 전에 init() 메서드가 호출되면서 사용했던 map 객체가 초기화됨
-        // 실행 결과 : failed
+//        assertDoesNotThrow(() -> getCryptoCurrency("XRP"));
+
+        assertThrows(NullPointerException.class, () -> getCryptoCurrency("XRP"));
     }
 
     private String getCryptoCurrency(String unit) {

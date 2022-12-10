@@ -48,7 +48,7 @@ public class MemberControllerMockTest {
 
         // Stubbing 메서드 (테스트를 위해 Mock 객체가 항상 일정한 동작을 하도록 지정)
         // 가짜 객체인 memberService로 가짜 메서드를 호출
-        given(memberService.createMember(Mockito.any(Member.class)))
+        given(memberService.createMember(Mockito.any()))
                 .willReturn(member);
 
         String content = gson.toJson(post);
@@ -57,10 +57,9 @@ public class MemberControllerMockTest {
         ResultActions actions =
                 mockMvc.perform(
                         post("/v11/members")
-                                .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(content)
-                );
+                                    .accept(MediaType.APPLICATION_JSON)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(content));
 
         // then
         MvcResult result = actions

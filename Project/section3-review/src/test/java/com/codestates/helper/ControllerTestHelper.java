@@ -9,7 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-public interface ControllerTestHelper<T> {
+public interface ControllerTestHelper {
     default RequestBuilder postRequestBuilder(URI uri, String content) {
         return MockMvcRequestBuilders
                 .post(uri)
@@ -52,9 +52,9 @@ public interface ControllerTestHelper<T> {
         return UriComponentsBuilder.newInstance().path(url).buildAndExpand(resourceId).toUri();
     }
 
-    default String toJsonContent(T t) {
-        Gson gson = new Gson();
-        String content = gson.toJson(t);
-        return content;
-    }
+//    default String toJsonContent(T t) {
+//        Gson gson = new Gson();
+//        String content = gson.toJson(t);
+//        return content;
+//    }
 }

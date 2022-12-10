@@ -26,16 +26,16 @@ public class PasswordValidatorTest {
     public void validatePasswordWithoutSpecialCharacter() {
         // given
         String password1 = "Abcd1234&!";
-        String password2 = "Abcd1234";
+//        String password2 = "Abcd1234";
 
         // when
         PasswordValidator validator = new PasswordValidator();
 
         Executable executable1 = () -> validator.validate(password1);
-        Executable executable2 = () -> validator.validate(password2);
+//        Executable executable2 = () -> validator.validate(password2);
 
         // then
         assertDoesNotThrow(executable1);
-        assertDoesNotThrow(executable2); ;
+//        assertDoesNotThrow(executable2); ;
     }
 }

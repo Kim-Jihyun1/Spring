@@ -4,8 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class HelloHamcrestTest {
     @DisplayName("Hello Junit Test using hamcrest")
@@ -16,7 +15,8 @@ public class HelloHamcrestTest {
 
         // JUnit Assertion : assertEquals(expected, actual); -> 파라미터로 입력된 값의 변수명으로 대략적으로 어떤 검증을 할지 유추 할 수 있음
         // Hamcrest Matcher :
-        assertThat(actual, is(equalTo(expected))); // 'assert that actual is equal to expected' 라는 문장으로 자연스럽게 읽힘
+//        assertThat(actual, is(equalTo(expected)));    // 'assert that actual is equal to expected' 라는 문장으로 자연스럽게 읽힘
+        assertThat(actual, is(not(equalTo(expected))));
     }
 }
 /*

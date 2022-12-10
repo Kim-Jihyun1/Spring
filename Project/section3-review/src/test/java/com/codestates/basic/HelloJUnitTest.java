@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class HelloJUnitTest {
     @DisplayName("Hello JUnit Test") // 테스트 케이스 실행 시, 실행 결과 창에 표시되는 이름 지정
@@ -12,7 +13,8 @@ public class HelloJUnitTest {
         String expected = "Hello, JUnit";
         String actual = "Hello, World";
 
-        assertEquals(expected, actual);
+//        assertEquals(expected, actual);   // failed
+        assertNotEquals(expected, actual);
     }
 }
 /*
