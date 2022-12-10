@@ -1,5 +1,6 @@
 package com.codestates.helper;
 
+import com.google.gson.Gson;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -8,7 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-public interface ControllerTestHelper {
+public interface ControllerTestHelper<T> {
     default RequestBuilder postRequestBuilder(URI uri, String content) {
         return MockMvcRequestBuilders
                 .post(uri)
@@ -49,5 +50,11 @@ public interface ControllerTestHelper {
 
     default URI createURI(String url, long resourceId) {
         return UriComponentsBuilder.newInstance().path(url).buildAndExpand(resourceId).toUri();
+    }
+
+    default String toJsonContent(T t) {
+        Gson gson = new Gson();
+        String content = gson.toJson(t);
+        return content;
     }
 }
