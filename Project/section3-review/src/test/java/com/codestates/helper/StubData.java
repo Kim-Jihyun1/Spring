@@ -22,7 +22,7 @@ public class StubData {
         stubRequestBody.put(HttpMethod.POST,
                 new MemberDto.Post("hgd@gmail.com","홍길동", "010-1111-1111"));
         stubRequestBody.put(HttpMethod.PATCH,
-                new MemberDto.Patch(0, "홍길동", "010-2222-2222", Member.MemberStatus.MEMBER_ACTIVE));
+                new MemberDto.Patch(1, "홍길동", "010-1111-1111", Member.MemberStatus.MEMBER_ACTIVE));
     }
 
     public static class MockMember {
